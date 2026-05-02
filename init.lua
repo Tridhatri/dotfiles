@@ -1,18 +1,35 @@
-vim.cmd([[set mouse=]])
-vim.cmd([[set noswapfile]])
-vim.cmd([[hi @lsp.type.number gui=italic]])
-vim.opt.winborder = "rounded"
+-- basics
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.termguicolors = true
+vim.opt.clipboard = "unnamedplus"
 vim.opt.showtabline = 2
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 vim.opt.cursorcolumn = false
 vim.opt.ignorecase = true
 vim.opt.smartindent = true
-vim.opt.termguicolors = true
 vim.opt.undofile = true
-vim.opt.number = true
+vim.opt.winborder = "rounded"
+vim.cmd([[set mouse=]])
+vim.cmd([[set noswapfile]])
+vim.cmd([[hi @lsp.type.number gui=italic]])
+vim.cmd [[set completeopt+=menuone,noselect,popup]]
+
+-- faster escape
+vim.keymap.set("i", "jj", "<Esc>")
+
+local map = vim.keymap.set
+vim.g.mapleader = " "
+
+map({ "n", "v", "x" }, ";", ":", { desc = "" })
+map({ "n", "v", "x" }, ":", ";", { desc = "" })
+
+map({ "n", "v", "x" }, "<leader>h",  "<Cmd>edit /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h<CR>",        { desc = "Edit stdio.h" })
+map({ "n", "v", "x" }, "<leader>ht", "<Cmd>edit /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/termios.h<CR>", { desc = "Edit termios.h" })
 
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
@@ -79,8 +96,6 @@ require("actions-preview").setup {
 	)
 }
 
-
-
 vim.api.nvim_create_autocmd('LspAttach', {
 	group = vim.api.nvim_create_augroup('my.lsp', {}),
 	callback = function(args)
@@ -93,8 +108,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		end
 	end,
 })
-
-vim.cmd [[set completeopt+=menuone,noselect,popup]]
 
 vim.lsp.enable({
 	"lua_ls", "cssls", "svelte", "tinymist",
@@ -125,8 +138,6 @@ require "vague".setup({ transparent = true })
 require("luasnip").setup({ enable_autosnippets = true })
 require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
 
--- ~/.config/nvim/init.lua
-
 local function pack_clean()
 	local active_plugins = {}
 	local unused_plugins = {}
@@ -153,13 +164,9 @@ local function pack_clean()
 end
 
 vim.keymap.set("n", "<leader>pc", pack_clean)
-local colors = {}
+
 local ls = require("luasnip")
 local builtin = require("telescope.builtin")
-local map = vim.keymap.set
-local current = 1
-
-vim.g.mapleader = " "
 
 map({ "n", "x" }, "<leader>y", '"+y')
 map({ "n", "x" }, "<leader>d", '"+d')
@@ -180,27 +187,25 @@ vim.cmd([[
 	xnoremap <expr> . "<esc><cmd>'<,'>normal! ".v:count1.'.<cr>'
 ]])
 
-
 for i = 1, 8 do
 	map({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
 end
-map({ "n", "v", "x" }, ";", ":", { desc = "" })
-map({ "n", "v", "x" }, ":", ";", { desc = "" })
-map({ "n", "v", "x" }, "<leader>v", "<Cmd>edit $MYVIMRC<CR>", { desc = "Edit " .. vim.fn.expand("$MYVIMRC") })
-map({ "n", "v", "x" }, "<leader>z", "<Cmd>e ~/.config/zsh/.zshrc<CR>", { desc = "Edit .zshrc" })
-map({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
-map({ "n", "v", "x" }, "<leader>o", "<Cmd>source %<CR>", { desc = "Source " .. vim.fn.expand("$MYVIMRC") })
-map({ "n", "v", "x" }, "<leader>O", "<Cmd>restart<CR>", { desc = "Restart vim." })
-map({ "n", "v", "x" }, "<C-s>", [[:s/\V]], { desc = "Enter substitue mode in selection" })
-map({ "n", "v", "x" }, "<leader>lf", vim.lsp.buf.format, { desc = "Format current buffer" })
-map({ "v", "x", "n" }, "<C-y>", '"+y', { desc = "System clipboard yank" })
-map({ "n" }, "<leader>f", builtin.find_files, { desc = "Telescope live grep" })
+
+map({ "n", "v", "x" }, "<leader>v",  "<Cmd>edit $MYVIMRC<CR>",              { desc = "Edit " .. vim.fn.expand("$MYVIMRC") })
+map({ "n", "v", "x" }, "<leader>z",  "<Cmd>e ~/.config/zsh/.zshrc<CR>",     { desc = "Edit .zshrc" })
+map({ "n", "v", "x" }, "<leader>n",  ":norm ",                              { desc = "ENTER NORM COMMAND." })
+map({ "n", "v", "x" }, "<leader>o",  "<Cmd>source %<CR>",                   { desc = "Source " .. vim.fn.expand("$MYVIMRC") })
+map({ "n", "v", "x" }, "<leader>O",  "<Cmd>restart<CR>",                    { desc = "Restart vim." })
+map({ "n", "v", "x" }, "<C-s>",      [[:s/\V]],                             { desc = "Enter substitue mode in selection" })
+map({ "n", "v", "x" }, "<leader>lf", vim.lsp.buf.format,                    { desc = "Format current buffer" })
+map({ "v", "x", "n" }, "<C-y>",      '"+y',                                 { desc = "System clipboard yank" })
+map({ "n" },           "<leader>f",  builtin.find_files,                    { desc = "Telescope find files" })
 
 function git_files() builtin.find_files({ no_ignore = true }) end
 
 function grep() builtin.live_grep({ additional_args = { "-e" } }) end
 
-map({ "n" }, "<leader>g", grep)
+map({ "n" }, "<leader>g",  grep)
 map({ "n" }, "<leader>sg", git_files)
 map({ "n" }, "<leader>sb", builtin.buffers)
 map({ "n" }, "<leader>si", builtin.grep_string)
@@ -209,7 +214,6 @@ map({ "n" }, "<leader>sh", builtin.help_tags)
 map({ "n" }, "<leader>sm", builtin.man_pages)
 map({ "n" }, "<leader>sr", builtin.lsp_references)
 map({ "n" }, "<leader>sd", builtin.diagnostics)
--- map({ "n" }, "<leader>si", builtin.lsp_implementations)
 map({ "n" }, "<leader>sT", builtin.lsp_type_definitions)
 map({ "n" }, "<leader>ss", builtin.current_buffer_fuzzy_find)
 map({ "n" }, "<leader>st", builtin.builtin)
@@ -224,12 +228,11 @@ map({ "n" }, "<M-m>", "<cmd>vertical resize -5<CR>")
 map({ "n" }, "<leader>e", "<cmd>Oil<CR>")
 map({ "n" }, "<leader>c", "1z=")
 map({ "n" }, "<C-q>", ":copen<CR>", { silent = true })
-map({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buffer." })
-map({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
-map({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
-map({ "n" }, "<C-f>", "<Cmd>Open .<CR>", { desc = "Open current directory in Finder." })
-map({ "n" }, "<leader>a", ":edit #<CR>", { desc = "Open current directory in Finder." })
-
+map({ "n" }, "<leader>w", "<Cmd>update<CR>",   { desc = "Write the current buffer." })
+map({ "n" }, "<leader>q", "<Cmd>quit<CR>",     { desc = "Quit the current buffer." })
+map({ "n" }, "<leader>Q", "<Cmd>wqa<CR>",      { desc = "Quit all buffers and write." })
+map({ "n" }, "<C-f>",     "<Cmd>Open .<CR>",   { desc = "Open current directory in Finder." })
+map({ "n" }, "<leader>a", ":edit #<CR>",       { desc = "Alternate buffer." })
 
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -237,6 +240,7 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 vim.cmd('colorscheme ' .. default_color)
+
 -- Run gg-repo-sync automatically after saving a PHP file
 vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = "*.php",
@@ -254,11 +258,11 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 require('vim._extui').enable({
-	enable = true, -- Whether to enable or disable the UI.
-	msg = {       -- Options related to the message module.
+	enable = true,
+	msg = {
 		---@type 'cmd'|'msg' Where to place regular messages, either in the
 		---cmdline or in a separate ephemeral message window.
 		target = 'cmd',
-		timeout = 4000, -- Time a message is visible in the message window.
+		timeout = 4000,
 	},
 })
