@@ -1,6 +1,6 @@
 # About
 These are my Configuration files for Vim, Neovim including telescope, fzf. 
-# Why and My Vim addiction journey
+# My Vim addiction journey
 Vim is something I am deeply passionate about. And there was point in my life, where I was only doing vim scripting and trying to max out my productiviy. 
 I find that my relationship with Vim is less about text editing and more about achieving a state of "flow" where the barrier between thought and execution disappears. 
 
