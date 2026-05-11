@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =2
+let g:netrw_dirhist_2='/Users/tridhatri/Downloads/ToC-Assignments'
+let g:netrw_dirhist_1='/Users/tridhatri/Documents/Roadmap.sh_ javascript'
+let g:netrw_dirhist_0='/Users'
+let g:netrw_dirhist_9='/Users/tridhatri'
+let g:netrw_dirhist_8='/Users/tridhatri/.vim'
+let g:netrw_dirhist_7='/Users/tridhatri/.vim/colors'
+let g:netrw_dirhist_6='/Users/tridhatri/.vim'
+let g:netrw_dirhist_5='/Users/tridhatri/.vim/plugged'
+let g:netrw_dirhist_4='/Users/tridhatri/.vim'
+let g:netrw_dirhist_3='/Users/tridhatri/.vim/plugged'

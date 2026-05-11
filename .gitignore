@@ -1,0 +1,18 @@
+# History files
+.zsh_history
+.bash_history
+.mysql_history
+.python_history
+.node_repl_history
+
+# Shell config
+.oh-my-zsh/
+.zsh_sessions/
+
+# Editor caches
+.swp
+.swo
+*~
+
+# OS files
+.DS_Store
